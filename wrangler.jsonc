@@ -1,0 +1,8 @@
+{
+  "name": "taief-market-bot",
+  "main": "bot.py",
+  "compatibility_date": "2026-09-20",
+  "compatibility_flags": [
+    "python_workers"
+  ]
+}
