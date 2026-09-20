@@ -46,3 +46,6 @@ class Default(WorkerEntrypoint):
 
         except Exception as e:
             return Response("Error: " + str(e), status=500)ld
+
+if __name__ == "__main__":
+    main()
