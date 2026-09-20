@@ -1,18 +1,45 @@
-import os
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from workers import WorkerEntrypoint, Response
+from js import fetch
+import json
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "👋 স্বাগতম!\n\nTAIEF Market Bot চালু হয়েছে।"
-    )
+class Default(WorkerEntrypoint):
+    async def fetch(self, request):
+        if request.method == "GET":
+            return Response("TAIEF Market Bot is running!")
 
-def main():
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.run_polling()
+        if request.method != "POST":
+            return Response("Method not allowed", status=405)
 
-if __name__ == "__main__":
-    main()
+        try:
+            update = await request.json()
+
+            message = update.get("message", {})
+            chat = message.get("chat", {})
+            text = message.get("text", "")
+
+            if text == "/start":
+                chat_id = chat.get("id")
+
+                data = {
+                    "chat_id": chat_id,
+                    "text": "👋 স্বাগতম!\n\nTAIEF Market Bot চালু হয়েছে।"
+                }
+
+                token = self.env.BOT_TOKEN
+
+                await fetch(
+                    f"https://api.telegram.org/bot{token}/sendMessage",
+                    {
+                        "method": "POST",
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        "body": json.dumps(data)
+                    }
+                )
+
+            return Response("OK")
+
+        except Exception as e:
+            return Response("Error: " + str(e), status=500)ld
