@@ -23,7 +23,10 @@ class Default(WorkerEntrypoint):
 
                 data = {
                     "chat_id": chat_id,
-                    "text": "👋 স্বাগতম!\n\nTAIEF Market Bot চালু হয়েছে।"
+                    ld
+                    if __name__ == "__main__":
+    main()
+                    ext": "👋 স্বাগতম!\n\nTAIEF Market Bot চালু হয়েছে।"
                 }
 
                 token = self.env.BOT_TOKEN
